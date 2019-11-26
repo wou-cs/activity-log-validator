@@ -47,10 +47,11 @@ def test_get_single_activity():
 
 def test_add_new_activity():
     """Verify that we can create a new item and that the id and location point to it"""
+    timestamp = datetime.utcnow()
     new_activity = {
         "user_id": 9,
         "username": "Paul",
-        "timestamp": str(datetime.utcnow()),
+        "timestamp": timestamp.isoformat(),
         "details": "Paul is alive",
     }
     try:
@@ -60,5 +61,9 @@ def test_add_new_activity():
         assert "location" in reply
         assert "id" in reply
         assert reply["location"] == "/api/activities/" + reply["id"]
+
+        # Let's check how the timestamp is formatted
+        returned_timestamp = datetime.fromisoformat(reply["timestamp"])
+        assert timestamp == returned_timestamp
     except requests.exceptions.RequestException:
         assert False, f"Could not connect to activity log service at {log_url}"
