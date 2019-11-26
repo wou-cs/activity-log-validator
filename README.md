@@ -8,7 +8,7 @@ This repository contains a simple set of [pytest](https://docs.pytest.org/en/lat
 
 The best way to learn what these tests are looking for is to read the tests. A brief summary is as follows:
 
-* The service returns a list of at least one entry at `/api/activities` (not there is no trailing slash)\
+* The service returns a list of at least one entry at `/api/activities` (note there is **no** trailing slash)
     * The top-level item is a dictionary with a single `activities` entry
     * This dictionary contains an array of individual items
 * A single item returned from the list will have the following elements:
