@@ -1,7 +1,9 @@
 import json
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
+from dateutil.parser import parse
+
 
 base_url = os.environ.get('BASE_URL', "http://localhost:5001")
 log_url = base_url + "/api/activities"
@@ -47,7 +49,7 @@ def test_get_single_activity():
 
 def test_add_new_activity():
     """Verify that we can create a new item and that the id and location point to it"""
-    timestamp = datetime.utcnow()
+    timestamp = datetime.now(timezone.utc)
     new_activity = {
         "user_id": 9,
         "username": "Paul",
@@ -63,7 +65,7 @@ def test_add_new_activity():
         assert reply["location"] == "/api/activities/" + reply["id"]
 
         # Let's check how the timestamp is formatted
-        returned_timestamp = datetime.fromisoformat(reply["timestamp"])
-        assert timestamp == returned_timestamp
+        returned_timestamp = parse(reply["timestamp"])
+        assert abs((timestamp-returned_timestamp).total_seconds()) < 1
     except requests.exceptions.RequestException:
         assert False, f"Could not connect to activity log service at {log_url}"
